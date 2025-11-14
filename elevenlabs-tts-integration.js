@@ -96,6 +96,105 @@ function stopAudio() {
     }
 }
 
+// ============================================
+// MOBILE AUDIO FIX
+// ============================================
+
+// Create AudioContext for mobile browsers
+let audioContext = null;
+let mobileAudioUnlocked = false;
+
+/**
+ * Initialize and resume AudioContext on user interaction (required for iOS/Android)
+ */
+function unlockMobileAudio() {
+    if (mobileAudioUnlocked) return;
+
+    try {
+        // Create AudioContext if it doesn't exist
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        // Resume AudioContext (required for iOS Safari)
+        if (audioContext.state === 'suspended') {
+            audioContext.resume();
+        }
+
+        mobileAudioUnlocked = true;
+        console.log('✅ Mobile audio unlocked');
+
+    } catch (error) {
+        console.warn('⚠️ AudioContext initialization failed:', error);
+    }
+}
+
+// Auto-unlock audio on first user interaction (touch or click)
+['touchstart', 'touchend', 'click'].forEach(event => {
+    document.addEventListener(event, unlockMobileAudio, { once: true, passive: true });
+});
+
+/**
+ * Play audio with mobile fallback
+ * @param {string} audioDataUrl - Audio data URL
+ * @returns {Promise<void>}
+ */
+function playAudioWithMobileFallback(audioDataUrl) {
+    return new Promise((resolve, reject) => {
+        // Unlock audio context first
+        unlockMobileAudio();
+
+        // Stop any currently playing audio
+        if (currentAudio) {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+        }
+
+        const audio = new Audio(audioDataUrl);
+        currentAudio = audio;
+
+        audio.onended = () => {
+            console.log('✅ Audio playback completed');
+            currentAudio = null;
+            resolve();
+        };
+
+        audio.onerror = (error) => {
+            console.error('❌ Audio playback error:', error);
+            currentAudio = null;
+            reject(error);
+        };
+
+        // Try to play
+        const playPromise = audio.play();
+
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.warn('⚠️ Autoplay blocked, waiting for user interaction...');
+
+                // Show a simple prompt for user to tap to play
+                const playButton = document.createElement('div');
+                playButton.innerHTML = '🔊 Tap to play audio';
+                playButton.style.cssText = `
+                    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                    background: #003A70; color: white; padding: 20px 40px;
+                    border-radius: 12px; font-size: 18px; cursor: pointer;
+                    z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                `;
+
+                document.body.appendChild(playButton);
+
+                playButton.addEventListener('click', () => {
+                    unlockMobileAudio();
+                    audio.play().then(() => {
+                        playButton.remove();
+                    }).catch(reject);
+                }, { once: true });
+            });
+        }
+    });
+}
+
 /**
  * Generate and play TTS for assistant messages
  * @param {string} text - Text to speak
@@ -107,8 +206,8 @@ async function speakAssistantMessage(text, language = 'ar') {
         // Generate TTS audio
         const audioDataUrl = await textToSpeech(text, language);
 
-        // Play audio
-        await playAudio(audioDataUrl);
+        // Play audio with mobile fallback
+        await playAudioWithMobileFallback(audioDataUrl);
 
     } catch (error) {
         console.error('❌ Failed to speak message:', error);
@@ -213,8 +312,8 @@ function integrateWithExistingVoiceSystem() {
                 console.log('🔊 Speaking with ElevenLabs...');
                 const audioDataUrl = await textToSpeech(text, this.language);
 
-                // Play the audio
-                await playAudio(audioDataUrl);
+                // Play the audio with mobile fallback
+                await playAudioWithMobileFallback(audioDataUrl);
 
                 // Call onSpeechComplete callback if exists
                 if (this.onSpeechComplete) {
@@ -258,11 +357,13 @@ setTimeout(integrateWithExistingVoiceSystem, 1000);
 // Make functions available globally
 window.elevenLabsTTS = {
     textToSpeech,
-    playAudio,
+    playAudio: playAudioWithMobileFallback,  // Use mobile-safe version
+    playAudioOriginal: playAudio,  // Keep original for backward compatibility
     stopAudio,
     speakAssistantMessage,
     speechToText,
-    integrateWithExistingVoiceSystem
+    integrateWithExistingVoiceSystem,
+    unlockMobileAudio  // Expose for manual unlocking if needed
 };
 
 console.log('✅ ElevenLabs TTS + Groq Whisper STT integration loaded');
