@@ -520,7 +520,7 @@ async function createTicketFromLLMData() {
         console.log('📤 Sending ticket to backend:', ticketPayload);
 
         // ✅ FIXED: Send to backend POST /tickets
-        const response = await fetch('http://13.51.235.197:3000/tickets', {
+        const response = await fetch('https://13.51.235.197/tickets', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

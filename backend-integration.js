@@ -4,8 +4,8 @@
  */
 
 // Backend base URL
-const BACKEND_URL = 'http://13.51.235.197:3000';
-const CONVERSATION_SERVER_URL = 'http://13.51.235.197:3000';
+const BACKEND_URL = 'https://13.51.235.197';
+const CONVERSATION_SERVER_URL = 'https://13.51.235.197';
 
 // Store uploaded images temporarily before ticket creation
 let uploadedImages = [];

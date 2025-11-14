@@ -3,7 +3,7 @@
  * Replaces OpenAI TTS with ElevenLabs + Groq Whisper STT
  */
 
-const CONVERSATION_SERVER = window.conversationState?.SERVER_URL || 'http://13.51.235.197:3000';
+const CONVERSATION_SERVER = window.conversationState?.SERVER_URL || 'https://13.51.235.197';
 
 // ============================================
 // TEXT-TO-SPEECH (ElevenLabs)

@@ -268,7 +268,7 @@ async function viewTicketDetails(ticketId) {
                                     ${photo.filename.substring(0, 20)}...
                                 </div>
                                 <button type="button"
-                                        onclick="window.open('http://13.51.235.197:3000${photo.url}', '_blank')"
+                                        onclick="window.open('https://13.51.235.197${photo.url}', '_blank')"
                                         class="ticket-file-btn">
                                     ${currentLanguage === 'ar' ? 'عرض' : 'View'}
                                 </button>
@@ -291,7 +291,7 @@ async function viewTicketDetails(ticketId) {
                         </div>
                         ${uploads.id_card ? `
                             <button type="button"
-                                    onclick="window.open('http://13.51.235.197:3000${uploads.id_card.url}', '_blank')"
+                                    onclick="window.open('https://13.51.235.197${uploads.id_card.url}', '_blank')"
                                     class="ticket-file-btn">
                                 ${currentLanguage === 'ar' ? 'عرض' : 'View'}
                             </button>
@@ -311,7 +311,7 @@ async function viewTicketDetails(ticketId) {
                         </div>
                         ${uploads.driving_license ? `
                             <button type="button"
-                                    onclick="window.open('http://13.51.235.197:3000${uploads.driving_license.url}', '_blank')"
+                                    onclick="window.open('https://13.51.235.197${uploads.driving_license.url}', '_blank')"
                                     class="ticket-file-btn">
                                 ${currentLanguage === 'ar' ? 'عرض' : 'View'}
                             </button>
@@ -331,7 +331,7 @@ async function viewTicketDetails(ticketId) {
                         </div>
                         ${uploads.vehicle_registration ? `
                             <button type="button"
-                                    onclick="window.open('http://13.51.235.197:3000${uploads.vehicle_registration.url}', '_blank')"
+                                    onclick="window.open('https://13.51.235.197${uploads.vehicle_registration.url}', '_blank')"
                                     class="ticket-file-btn">
                                 ${currentLanguage === 'ar' ? 'عرض' : 'View'}
                             </button>
