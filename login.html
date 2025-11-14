@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - Najm.ai</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/najm-logo.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="login-styles.css">
+</head>
+<body>
+    <!-- Najm Mobile Header -->
+    <header class="najm-header">
+        <!-- Language Toggle Button (Left side) -->
+        <button class="language-toggle-btn" id="langToggle" onclick="toggleLanguage()">EN</button>
+
+        <!-- Najm Logo (Center) -->
+        <div class="najm-header-logo">
+            <a href="index.html">
+                <img src="assets/images/Najm Logo.svg" alt="Najm">
+            </a>
+        </div>
+
+        <!-- Empty spacer -->
+        <div style="width: 70px;"></div>
+    </header>
+
+    <!-- Login Page -->
+    <div class="login-page">
+        <div class="login-container">
+            <div class="login-card">
+                <!-- Logo -->
+                <div class="login-logo">
+                    <img src="login.png" alt="Najm" style="width: 140px !important; height: 140px !important;">
+                </div>
+
+                <!-- Title -->
+                <h1 class="login-title" data-ar="تسجيل الدخول للوحة التحكم" data-en="Login to Dashboard">تسجيل الدخول للوحة التحكم</h1>
+
+                <!-- Login Form -->
+                <form id="loginForm" class="login-form" onsubmit="handleLogin(event)">
+                    <!-- Username Field -->
+                    <div class="form-group">
+                        <label for="username" data-ar="اسم المستخدم" data-en="Username">اسم المستخدم</label>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            required
+                            data-ar-placeholder="أدخل اسم المستخدم"
+                            data-en-placeholder="Enter username"
+                            placeholder="أدخل اسم المستخدم"
+                        >
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="form-group">
+                        <label for="password" data-ar="كلمة المرور" data-en="Password">كلمة المرور</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            required
+                            data-ar-placeholder="أدخل كلمة المرور"
+                            data-en-placeholder="Enter password"
+                            placeholder="أدخل كلمة المرور"
+                        >
+                    </div>
+
+                    <!-- Error Message -->
+                    <div id="loginError" class="login-error" style="display: none;"></div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="login-submit-btn" data-ar="دخول" data-en="Login">دخول</button>
+                </form>
+
+                <!-- Back to Home -->
+                <div class="back-to-home">
+                    <a href="index.html" data-ar="← العودة للرئيسية" data-en="← Back to Home">← العودة للرئيسية</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="auth.js"></script>
+    <script>
+        // Global State
+        let currentLanguage = 'ar';
+
+        // Language Toggle
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'ar' ? 'en' : 'ar';
+            updateLanguage();
+        }
+
+        function updateLanguage() {
+            const body = document.body;
+            const html = document.documentElement;
+            const langBtn = document.getElementById('langToggle');
+
+            if (currentLanguage === 'en') {
+                body.classList.add('ltr');
+                body.setAttribute('dir', 'ltr');
+                body.setAttribute('lang', 'en');
+                html.setAttribute('dir', 'ltr');
+                html.setAttribute('lang', 'en');
+                langBtn.textContent = 'ع';
+            } else {
+                body.classList.remove('ltr');
+                body.setAttribute('dir', 'rtl');
+                body.setAttribute('lang', 'ar');
+                html.setAttribute('dir', 'rtl');
+                html.setAttribute('lang', 'ar');
+                langBtn.textContent = 'EN';
+            }
+
+            // Update all translatable elements
+            document.querySelectorAll('[data-ar]').forEach(el => {
+                const key = currentLanguage === 'ar' ? 'data-ar' : 'data-en';
+                el.textContent = el.getAttribute(key);
+            });
+
+            // Update placeholders
+            document.querySelectorAll('[data-ar-placeholder]').forEach(el => {
+                const key = currentLanguage === 'ar' ? 'data-ar-placeholder' : 'data-en-placeholder';
+                el.placeholder = el.getAttribute(key);
+            });
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.getElementById('loginError');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Handle Login Form Submission
+        function handleLogin(event) {
+            event.preventDefault();
+
+            // Get form values
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            // Clear any previous errors
+            document.getElementById('loginError').style.display = 'none';
+
+            // Use AUTH.login for validation
+            const result = AUTH.login(username, password);
+
+            if (result.success) {
+                // Success - redirect to admin dashboard
+                console.log('✅ Redirecting to dashboard');
+                window.location.href = 'admin.html';
+            } else {
+                // Failed - show error message
+                const errorMessage = currentLanguage === 'ar'
+                    ? result.message
+                    : 'Invalid username or password';
+                showError(errorMessage);
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if already logged in
+            AUTH.redirectIfAuthenticated();
+
+            // Update language
+            updateLanguage();
+        });
+    </script>
+</body>
+</html>

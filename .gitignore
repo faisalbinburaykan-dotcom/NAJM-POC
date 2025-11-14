@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Uploads folder (user-generated content)
+server/uploads/accident_photos/*.jpeg
+server/uploads/accident_photos/*.jpg
+server/uploads/accident_photos/*.png
+server/uploads/id_cards/*.jpeg
+server/uploads/id_cards/*.jpg
+server/uploads/id_cards/*.png
+server/uploads/driving_licenses/*.jpeg
+server/uploads/driving_licenses/*.jpg
+server/uploads/driving_licenses/*.png
+server/uploads/vehicle_registrations/*.jpeg
+server/uploads/vehicle_registrations/*.jpg
+server/uploads/vehicle_registrations/*.png
+server/uploads/temp_audio/*
+
+# Ticket data (contains user information)
+server/tickets.json
+
+# System files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary files
+*.tmp
+*.temp
+.cache/

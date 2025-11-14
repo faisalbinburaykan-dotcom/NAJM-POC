@@ -1,0 +1,32 @@
+<svg width="340" height="340" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="najm-pattern" x="0" y="0" width="170" height="170" patternUnits="userSpaceOnUse">
+      <!-- Subtle diamond/square shapes in light gray -->
+      <g opacity="0.03">
+        <!-- Top-left diamond -->
+        <path d="M 42.5 0 L 85 42.5 L 42.5 85 L 0 42.5 Z" fill="#28282A"/>
+
+        <!-- Top-right diamond -->
+        <path d="M 127.5 0 L 170 42.5 L 127.5 85 L 85 42.5 Z" fill="#28282A"/>
+
+        <!-- Bottom-left diamond -->
+        <path d="M 42.5 85 L 85 127.5 L 42.5 170 L 0 127.5 Z" fill="#28282A"/>
+
+        <!-- Bottom-right diamond -->
+        <path d="M 127.5 85 L 170 127.5 L 127.5 170 L 85 127.5 Z" fill="#28282A"/>
+      </g>
+
+      <!-- Additional subtle geometric elements -->
+      <g opacity="0.02">
+        <!-- Center cross pattern -->
+        <circle cx="85" cy="85" r="3" fill="#28282A"/>
+        <circle cx="0" cy="0" r="2" fill="#28282A"/>
+        <circle cx="170" cy="0" r="2" fill="#28282A"/>
+        <circle cx="0" cy="170" r="2" fill="#28282A"/>
+        <circle cx="170" cy="170" r="2" fill="#28282A"/>
+      </g>
+    </pattern>
+  </defs>
+
+  <rect width="340" height="340" fill="url(#najm-pattern)"/>
+</svg>

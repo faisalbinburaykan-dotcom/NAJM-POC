@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Najm.ai - مساعد الحوادث الذكي</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="image copy 2.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css?v=5">
+</head>
+<body>
+    <!-- Najm Mobile Header -->
+    <header class="najm-header">
+        <!-- Language Toggle Button (Left side) -->
+        <button class="language-toggle-btn" id="langToggle" onclick="toggleLanguage()">EN</button>
+
+        <!-- Najm Logo (Center) -->
+        <div class="najm-header-logo">
+            <img src="assets/images/Najm Logo.svg" alt="Najm">
+        </div>
+
+        <!-- Login Button (Right side in RTL) -->
+        <button class="header-login-btn" id="loginBtn" type="button" onclick="goToLogin()" data-ar="تسجيل الدخول" data-en="Login">تسجيل الدخول</button>
+
+    </header>
+
+    <!-- Landing Page -->
+    <div id="landingPage" class="page active">
+        <div class="container">
+            <div class="landing-wrapper">
+                <!-- Left Side Image -->
+                <div class="landing-image">
+                    <img src="assets/images/image copy 4.png" alt="Najm Assistant">
+                </div>
+
+                <!-- Right Side Content -->
+                <div class="landing-content">
+                    <img src="assets/images/image copy 3.png" alt="Najm Logo" class="logo">
+                    <h1 class="main-title" data-ar="مساعد نجم الذكي" data-en="Najm AI Assistant">مساعد نجم الذكي</h1>
+                    <p class="subtitle" data-ar="نساعدك في تقديم بلاغك بسهولة وسرعة، في أي مكان." data-en="We help you file your report easily and quickly, anywhere.">نساعدك في تقديم بلاغك بسهولة وسرعة، في أي مكان.</p>
+                    <button class="primary-btn najm-btn" onclick="startReport()" data-ar="ابدأ تقرير الحادث" data-en="Start Accident Report">ابدأ تقرير الحادث</button>
+                    <div class="powered-by">
+                        <p data-ar="مدعوم بواسطة Sarj AI" data-en="Powered by Sarj AI">مدعوم بواسطة Sarj AI</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat/Voice Interface -->
+    <div id="chatPage" class="page">
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="header-content">
+                    <button class="back-btn" onclick="goToLanding()">←</button>
+                    <div class="header-info">
+                        <h2 data-ar="مساعد نجم" data-en="Najm Assistant">مساعد نجم</h2>
+                        <span class="status"><span class="status-dot"></span> <span data-ar="متصل" data-en="Online">متصل</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will be added here dynamically -->
+            </div>
+
+            <div class="chat-input-container">
+                <div class="input-wrapper">
+                    <button class="icon-btn" id="attachBtn" onclick="uploadImage()" title="Upload image">
+                        📎
+                    </button>
+                    <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+                    <input type="text" id="messageInput" class="message-input" data-ar-placeholder="اكتب رسالتك..." data-en-placeholder="Type your message..." placeholder="اكتب رسالتك...">
+                    <button class="icon-btn mic-btn" id="micBtn" onclick="toggleRecording()" title="Voice input">
+                        <img src="Voice Recognition Icon.png" alt="Voice" style="width: 24px; height: 24px;">
+                    </button>
+                    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                        <span data-ar="إرسال" data-en="Send">إرسال</span>
+                    </button>
+                </div>
+                <div class="recording-indicator" id="recordingIndicator" style="display: none;">
+                    <div class="waveform">
+                        <span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                    <span class="recording-time" id="recordingTime">00:00</span>
+                    <button class="stop-recording" onclick="stopRecording()">⏹</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPage" class="page">
+        <div class="admin-container">
+            <!-- Login Form -->
+            <div id="adminLogin" class="admin-login">
+                <div class="login-box">
+                    <h2 data-ar="تسجيل دخول الإدارة" data-en="Admin Login">تسجيل دخول الإدارة</h2>
+                    <form onsubmit="adminLogin(event)">
+                        <div class="form-group">
+                            <label data-ar="اسم المستخدم" data-en="Username">اسم المستخدم</label>
+                            <input type="text" id="adminUsername" required>
+                        </div>
+                        <div class="form-group">
+                            <label data-ar="كلمة المرور" data-en="Password">كلمة المرور</label>
+                            <input type="password" id="adminPassword" required>
+                        </div>
+                        <button type="submit" class="primary-btn" data-ar="تسجيل الدخول" data-en="Login">تسجيل الدخول</button>
+                    </form>
+                    <button class="back-btn-admin" onclick="goToLanding()" data-ar="← العودة للرئيسية" data-en="← Back to Home">← العودة للرئيسية</button>
+                </div>
+            </div>
+
+            <!-- Dashboard -->
+            <div id="adminDashboard" style="display: none;">
+                <div class="dashboard-header">
+                    <h2 data-ar="لوحة التحكم" data-en="Dashboard">لوحة التحكم</h2>
+                    <button class="logout-btn" onclick="adminLogout()" data-ar="تسجيل الخروج" data-en="Logout">تسجيل الخروج</button>
+                </div>
+                <div class="tickets-table">
+                    <table id="ticketsTable">
+                        <thead>
+                            <tr>
+                                <th data-ar="رقم التذكرة" data-en="Ticket ID">رقم التذكرة</th>
+                                <th data-ar="رقم اللوحة" data-en="Plate">رقم اللوحة</th>
+                                <th data-ar="عدد المركبات" data-en="Vehicles">عدد المركبات</th>
+                                <th data-ar="نوع الضرر" data-en="Damage">نوع الضرر</th>
+                                <th data-ar="الحالة" data-en="Status">الحالة</th>
+                                <th data-ar="التاريخ" data-en="Date">التاريخ</th>
+                                <th data-ar="الإجراءات" data-en="Actions">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ticketsTableBody">
+                            <!-- Tickets will be added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Ticket Details Modal -->
+            <div id="ticketModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 data-ar="تفاصيل التذكرة" data-en="Ticket Details">تفاصيل التذكرة</h3>
+                        <button class="close-modal" onclick="closeTicketModal()">×</button>
+                    </div>
+                    <div id="ticketDetails" class="modal-body">
+                        <!-- Details will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="config.js?v=8"></script>
+    <script src="auth.js"></script>
+    <script src="backend-integration.js?v=5"></script>
+    <!-- Conversation Manager (DEPRECATED - Stub only) -->
+    <script src="conversation-manager.js?v=stub"></script>
+    <!-- ElevenLabs TTS + Groq Whisper STT -->
+    <script src="elevenlabs-tts-integration.js?v=2"></script>
+    <script src="voice.js?v=llm"></script>
+    <script src="ocr.js"></script>
+    <script src="admin.js"></script>
+    <!-- LLM-Driven Conversation System -->
+    <script src="app.js?v=llm"></script>
+</body>
+</html>

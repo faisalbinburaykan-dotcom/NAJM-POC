@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - Najm.ai</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/najm-logo.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="admin.css?v=1">
+</head>
+<body>
+    <!-- Najm Mobile Header -->
+    <header class="najm-header">
+        <!-- Language Toggle Button (Left side) -->
+        <button class="language-toggle-btn" id="langToggle" onclick="toggleLanguage()">EN</button>
+
+        <!-- Najm Logo (Center) -->
+        <div class="najm-header-logo">
+            <a href="index.html">
+                <img src="assets/images/Najm Logo.svg" alt="Najm">
+            </a>
+        </div>
+
+        <!-- Logout Button (Right side in RTL) -->
+        <button class="header-login-btn header-logout-btn" id="logoutBtn" type="button" onclick="localStorage.clear(); window.location.href='index.html';" data-ar="تسجيل الخروج" data-en="Logout">تسجيل الخروج</button>
+    </header>
+
+    <!-- Admin Panel -->
+     <div class="admin-main">
+            <!-- Dashboard -->
+            <div id="adminDashboard">
+                <table class="tickets-table" id="ticketsTable">
+                    <thead>
+                        <tr>
+                            <th data-ar="رقم التذكرة" data-en="Ticket Number">رقم التذكرة</th>
+                            <th data-ar="رقم الهوية" data-en="National ID">رقم الهوية</th>
+                            <th data-ar="الحالة" data-en="Status">الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ticketsTableBody">
+                        <!-- Tickets will be added here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Ticket Details Modal -->
+            <div id="ticketModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 data-ar="تفاصيل التذكرة" data-en="Ticket Details">تفاصيل التذكرة</h3>
+                        <button class="close-modal" onclick="closeTicketModal()">×</button>
+                    </div>
+                    <div id="ticketDetails" class="modal-body">
+                        <!-- Details will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div id="adminPage" class="page active">
+        
+    </div>
+
+    <!-- Scripts -->
+    <script src="auth.js"></script>
+    <script src="backend-integration.js?v=5"></script>
+    <script src="admin.js"></script>
+    <script>
+        // Protect this route - must be logged in
+        AUTH.protectRoute();
+
+        // Global State
+        let currentLanguage = 'ar';
+
+        // Language Toggle
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'ar' ? 'en' : 'ar';
+            updateLanguage();
+        }
+
+        function updateLanguage() {
+            const body = document.body;
+            const html = document.documentElement;
+            const langBtn = document.getElementById('langToggle');
+
+            if (currentLanguage === 'en') {
+                body.classList.add('ltr');
+                body.setAttribute('dir', 'ltr');
+                body.setAttribute('lang', 'en');
+                html.setAttribute('dir', 'ltr');
+                html.setAttribute('lang', 'en');
+                langBtn.textContent = 'ع';
+            } else {
+                body.classList.remove('ltr');
+                body.setAttribute('dir', 'rtl');
+                body.setAttribute('lang', 'ar');
+                html.setAttribute('dir', 'rtl');
+                html.setAttribute('lang', 'ar');
+                langBtn.textContent = 'EN';
+            }
+
+            // Update all translatable elements
+            document.querySelectorAll('[data-ar]').forEach(el => {
+                const key = currentLanguage === 'ar' ? 'data-ar' : 'data-en';
+                el.textContent = el.getAttribute(key);
+            });
+
+            // Update placeholders
+            document.querySelectorAll('[data-ar-placeholder]').forEach(el => {
+                const key = currentLanguage === 'ar' ? 'data-ar-placeholder' : 'data-en-placeholder';
+                el.placeholder = el.getAttribute(key);
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📱 Admin page loaded');
+
+            updateLanguage();
+
+            // Load tickets if function exists
+            if (typeof loadTickets === 'function') {
+                loadTickets();
+            }
+        });
+    </script>
+</body>
+</html>
