@@ -150,7 +150,7 @@ app.use((err, req, res, next) => {
 // START SERVER
 // ============================================
 
-app.listen(PORT, () => {
+app.listen(PORT,"0.0.0.0",() => {
     console.log('\n🚀 Najm Assistant Backend Server Started\n');
     console.log(`📡 Server running on: http://localhost:${PORT}`);
     console.log(`🏥 Health check: http://localhost:${PORT}/health`);
