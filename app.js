@@ -476,7 +476,7 @@ async function handleImageUpload(event) {
 
 /**
  * Create ticket from LLM data when phase is "done"
- * ✅ FIXED: Now sends ticket to backend at POST http://localhost:3000/tickets
+ * ✅ FIXED: Now sends ticket to backend at POST http://13.51.235.197:3000/tickets
  */
 async function createTicketFromLLMData() {
     try {
@@ -520,7 +520,7 @@ async function createTicketFromLLMData() {
         console.log('📤 Sending ticket to backend:', ticketPayload);
 
         // ✅ FIXED: Send to backend POST /tickets
-        const response = await fetch('http://localhost:3000/tickets', {
+        const response = await fetch('http://13.51.235.197:3000/tickets', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
