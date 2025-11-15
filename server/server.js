@@ -208,16 +208,40 @@ app.post('/upload', upload.array('files', 10), (req, res) => {
         };
         const folder = typeFolderMap[type] || 'accident_photos';
 
-        const uploadedFiles = req.files.map(file => ({
-            filename: file.filename,
-            originalName: file.originalname,
-            path: file.path,
-            url: `/uploads/${folder}/${file.filename}`,
-            type: type,
-            size: file.size,
-            mimetype: file.mimetype,
-            uploadedAt: new Date().toISOString()
-        }));
+        // ✅ FIX: Move files to correct directory if multer saved them to wrong location
+        const uploadedFiles = req.files.map(file => {
+            const correctPath = path.join(UPLOAD_DIR, folder, file.filename);
+
+            // If file is not in the correct directory, move it
+            if (file.path !== correctPath) {
+                try {
+                    // Ensure target directory exists
+                    const targetDir = path.join(UPLOAD_DIR, folder);
+                    if (!fs.existsSync(targetDir)) {
+                        fs.mkdirSync(targetDir, { recursive: true });
+                    }
+
+                    // Move file to correct location
+                    fs.renameSync(file.path, correctPath);
+                    console.log(`📦 Moved file from ${file.path} to ${correctPath}`);
+
+                    file.path = correctPath;
+                } catch (moveError) {
+                    console.error(`❌ Error moving file:`, moveError);
+                }
+            }
+
+            return {
+                filename: file.filename,
+                originalName: file.originalname,
+                path: correctPath,
+                url: `/uploads/${folder}/${file.filename}`,
+                type: type,
+                size: file.size,
+                mimetype: file.mimetype,
+                uploadedAt: new Date().toISOString()
+            };
+        });
 
         // If ticket_id is provided, save to tickets data
         if (ticketId) {
