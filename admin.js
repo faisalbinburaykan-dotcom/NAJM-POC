@@ -189,7 +189,33 @@ async function viewTicketDetails(ticketId) {
 
         // ✅ Safe access to nested objects
         const ex = ticket.extracted_data || {};
-        const uploads = ex.uploads || {};
+
+        // ✅ ROBUST FALLBACK LOGIC: Handle both array and object formats
+        let uploads = {};
+
+        // Check if ticket.uploads exists and is not an empty array
+        if (ticket.uploads && Array.isArray(ticket.uploads) && ticket.uploads.length > 0) {
+            // Old format: uploads is an array
+            uploads = ticket.uploads;
+            console.log('📦 Using ticket.uploads (array format):', uploads);
+        } else if (ticket.uploads && !Array.isArray(ticket.uploads) && Object.keys(ticket.uploads).length > 0) {
+            // Old format: uploads is an object
+            uploads = ticket.uploads;
+            console.log('📦 Using ticket.uploads (object format):', uploads);
+        } else if (ex.uploads && Object.keys(ex.uploads).length > 0) {
+            // New format: uploads is nested in extracted_data
+            uploads = ex.uploads;
+            console.log('📦 Using ticket.extracted_data.uploads:', uploads);
+        } else {
+            console.warn('⚠️ No uploads found in ticket');
+        }
+
+        console.log('📋 Final uploads object:', uploads);
+        console.log('📄 Document URLs:', {
+            id_card: uploads.id_card?.url,
+            driving_license: uploads.driving_license?.url,
+            vehicle_registration: uploads.vehicle_registration?.url
+        });
 
         // ✅ Ticket ID (رقم التذكرة)
         const ticketId_display = ticket.id || 'غير متوفر';
