@@ -177,7 +177,7 @@ function playAudioWithMobileFallback(audioDataUrl) {
                 playButton.innerHTML = '🔊 Tap to play audio';
                 playButton.style.cssText = `
                     position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-                    background: #003A70; color: white; padding: 20px 40px;
+                    background: #33835c; color: white; padding: 20px 40px;
                     border-radius: 12px; font-size: 18px; cursor: pointer;
                     z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
                 `;
